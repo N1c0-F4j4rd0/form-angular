@@ -1,0 +1,40 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="app-header">
+      <h1>{{title}}</h1>
+      <p>Sistema completo de gestion CRUD</p>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="container">
+      <section class="form-section">
+        <div class="form-section">
+          <div class="section-header">
+            <h2>Editar Recurso</h2>
+            <p>Complete el formulario</p>
+          </div>
+          <app-resource-form
+          [editingResource]="editingResource"
+          (resourceSaved)="onResourceSaved()">
+        </app-resource-form>
+        </div>
+      </section>
+
+      <section class = "list-section">
+        <div class="section-header">
+          <h2>Lista de recursos</h2>
+          <p>Gestiona todos los recursos disponibles en el sistema</p>
+        </div>
+
+        <app-resource-list (editingResource)="onEditResource($event)">
+        </app-resource-list>
+      </section>
+    </div>
+  </main>
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p> 2025 Sistema CRUD</p>
+    </div>
+  </footer>
+</div>
