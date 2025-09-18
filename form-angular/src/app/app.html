@@ -15,9 +15,9 @@
             <p>Complete el formulario</p>
           </div>
           <app-resource-form
-          [editingResource]="editingResource"
-          (resourceSaved)="onResourceSaved()">
-        </app-resource-form>
+  [editingResource]="editingResource"
+  (resourceSaved)="onResourceSaved($event)">
+</app-resource-form>
         </div>
       </section>
 
@@ -27,8 +27,11 @@
           <p>Gestiona todos los recursos disponibles en el sistema</p>
         </div>
 
-        <app-resource-list (editingResource)="onEditResource($event)">
-        </app-resource-list>
+        <app-resource-list
+  [resources]="resources"
+  (editingResource)="onEditResource($event)"
+  (deletedResource)="onDeleteResource($event)">
+</app-resource-list>
       </section>
     </div>
   </main>

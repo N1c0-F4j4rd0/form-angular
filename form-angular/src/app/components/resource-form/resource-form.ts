@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Resorce } from '../../models/resource';
-import { ResourceService } from '../../services/resource';
+import { PostsService } from '../../services/resource';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,14 +15,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class ResourceForm implements OnInit{
   @Input() editingResource: Resorce | null = null;
-  @Output() resourceSaved = new EventEmitter<void>();
+  @Output() resourceSaved = new EventEmitter<Resorce>();
 
-  resource: Resorce = { title: '', body: '', userId: 1, id: 0 };
+  resource: Resorce = { title: '', body: '', userId: 1 };
 
   categories = ['Tecnologia', 'Educación', 'Salud', 'Negocios'];
   statuses = ['active', 'inactive', 'pending'];
 
-  constructor(private resourceService: ResourceService) { }
+  constructor(private resourceService: PostsService) { }
 
   ngOnInit(): void {
     if (this.editingResource) {
@@ -31,37 +31,31 @@ export class ResourceForm implements OnInit{
   }
 
   onSubmit(): void {
-    if (this.resource.id) {
-      this.resourceService.updateResource(this.resource.id, this.resource)
+  if (this.resource.id) {
+    this.resourceService.update(this.resource.id!, this.resource)
       .subscribe({
-        next: () => {
+        next: (updated) => {
           alert('Recurso actualizado con éxito');
+          this.resourceSaved.emit(updated); // enviamos el objeto
           this.resetForm();
-          this.resourceSaved.emit();
         },
-        error: (error) => {
-          console.error('Error al actualizar el recurso', error);
-          alert('Error al actualizar el recurso');
-        }
+        error: (error) => console.error('Error al actualizar', error)
       });
-    } else {
-      this.resourceService.createResource(this.resource)
+  } else {
+    this.resourceService.create(this.resource)
       .subscribe({
-        next: () => {
+        next: (created) => {
           alert('Recurso creado con éxito');
+          this.resourceSaved.emit(created); // enviamos el objeto creado
           this.resetForm();
-          this.resourceSaved.emit();
         },
-        error: (error) => {
-          console.error('Error al crear el recurso', error);
-          alert('Error al crear el recurso');
-        }
+        error: (error) => console.error('Error al crear', error)
       });
-    }
   }
+}
 
   resetForm(): void {
-  this.resource = { title: '', body: '', userId: 1, id: 0 };
+    this.resource = { title: '', body: '', userId: 1 };
     this.editingResource = null;
   }
 }

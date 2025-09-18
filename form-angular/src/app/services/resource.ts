@@ -1,32 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Resorce } from '../models/resource'; 
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ResourceService {
-  private apiUrl = 'https://jsonplaceholder.typicode.com/posts';
-  constructor(private http: HttpClient) { }
+export interface Post {
+  userId: number;
+  id?: number;
+  title: string;
+  body: string;
+}
 
-  createResource(resource: Resorce): Observable<Resorce> {
-    return this.http.post<Resorce>(this.apiUrl, resource);
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  private base = 'https://jsonplaceholder.typicode.com';
+
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.base}/posts`);
   }
 
-  getResources(): Observable<Resorce[]> {
-    return this.http.get<Resorce[]>(this.apiUrl);
+  getOne(id: number): Observable<Post> {
+    return this.http.get<Post>(`${this.base}/posts/${id}`);
   }
 
-  getResourceById(id: number): Observable<Resorce> {
-    return this.http.get<Resorce>(`${this.apiUrl}/${id}`);
+  create(payload: Post): Observable<Post> {
+    return this.http.post<Post>(`${this.base}/posts`, payload);
   }
 
-  updateResource(id: number, resource: Resorce): Observable<Resorce> {
-    return this.http.put<Resorce>(`${this.apiUrl}/${id}`, resource);
+  update(id: number, payload: Post): Observable<Post> {
+    return this.http.put<Post>(`${this.base}/posts/${id}`, payload);
   }
 
-  deleteResource(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/posts/${id}`);
   }
 }
